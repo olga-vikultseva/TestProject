@@ -1,5 +1,6 @@
 package com.example.testproject.injectionmanager
 
+import android.util.Log
 import com.example.testproject.injectionmanager.exceptions.ComponentNotFoundException
 
 class ComponentsStore {
@@ -9,12 +10,14 @@ class ComponentsStore {
     fun isComponentExist(key: String): Boolean = componentsMap.containsKey(key)
 
     fun addComponent(key: String, component: Any) {
+        Log.d("test", "В ComponentStore добавлен новый компонент: component - ${component.javaClass}, key - $key")
         componentsMap[key] = component
     }
 
     fun getComponent(key: String): Any = componentsMap[key] ?: throw ComponentNotFoundException()
 
     fun removeComponent(key: String) {
+        Log.d("test", "Из ComponentStore удален компонент: key - $key")
         componentsMap.remove(key)
     }
 

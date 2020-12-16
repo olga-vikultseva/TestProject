@@ -1,4 +1,4 @@
-package com.example.testproject.injectionmanager.helper
+package com.example.testproject.injectionmanager.helpers
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,21 +10,21 @@ class FragmentLifecycleHelper(
     private val componentsStore: ComponentsStore
 ) : FragmentManager.FragmentLifecycleCallbacks() {
 
-    private var isInSaveState = false
+    private var isConfigurationChange = false
 
     override fun onFragmentStarted(fm: FragmentManager, f: Fragment) {
         super.onFragmentStarted(fm, f)
-        isInSaveState = false
+        isConfigurationChange = false
     }
 
     override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
         super.onFragmentResumed(fm, f)
-        isInSaveState = false
+        isConfigurationChange = false
     }
 
     override fun onFragmentSaveInstanceState(fm: FragmentManager, f: Fragment, outState: Bundle) {
         super.onFragmentSaveInstanceState(fm, f, outState)
-        isInSaveState = true
+        isConfigurationChange = true
     }
 
     override fun onFragmentDestroyed(fm: FragmentManager, f: Fragment) {
@@ -32,24 +32,9 @@ class FragmentLifecycleHelper(
 
         if (f !is IHasComponent) return
 
-        if (f.requireActivity().isFinishing) {
-            componentsStore.removeComponent(f.javaClass.toString())
-            return
-        }
-
-        if (isInSaveState) {
-            isInSaveState = false
-            return
-        }
-
-        var anyParentIsRemoving = false
-        var parent = f.parentFragment
-        while (!anyParentIsRemoving && parent != null) {
-            anyParentIsRemoving = parent.isRemoving
-            parent = parent.parentFragment
-        }
-        if (f.isRemoving || anyParentIsRemoving) {
+        if (!isConfigurationChange || f.requireActivity().isFinishing) {
             componentsStore.removeComponent(f.getComponentKey())
+            return
         }
     }
 }

@@ -1,7 +1,16 @@
 package com.example.testproject.homefeature.di
 
-import dagger.Component
+import com.example.testproject.homefeature.ui.HomeFragment
+import dagger.Subcomponent
 
-@Component
+@HomeFeatureScope
+@Subcomponent(modules = [HomeFeatureModule::class])
 interface HomeFeatureComponent {
+
+    fun inject(fragment: HomeFragment)
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): HomeFeatureComponent
+    }
 }

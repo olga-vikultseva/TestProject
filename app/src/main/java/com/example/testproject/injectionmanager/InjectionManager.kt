@@ -1,19 +1,14 @@
 package com.example.testproject.injectionmanager
 
 import android.app.Application
-import com.example.testproject.injectionmanager.helper.ActivityLifecycleHelper
+import com.example.testproject.injectionmanager.helpers.ActivityLifecycleHelper
 
-class InjectionManager {
-
-    companion object {                                 // если это фабричный метод, почему мы не передаем сюда app: Application
-        @JvmStatic                                     // тогда функцию init можно было бы заменить на блок init
-        val instance = InjectionManager()
-    }
+object InjectionManager {
 
     private val componentsStore = ComponentsStore()
 
-    fun init(app: Application) {
-        app.registerActivityLifecycleCallbacks(ActivityLifecycleHelper(componentsStore))
+    fun init(application: Application) {
+        application.registerActivityLifecycleCallbacks(ActivityLifecycleHelper(componentsStore))
     }
 
     @Suppress("UNCHECKED_CAST")

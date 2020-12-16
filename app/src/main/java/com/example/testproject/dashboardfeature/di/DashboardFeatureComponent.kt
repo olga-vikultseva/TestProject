@@ -1,7 +1,16 @@
 package com.example.testproject.dashboardfeature.di
 
-import dagger.Component
+import com.example.testproject.dashboardfeature.ui.DashboardFragment
+import dagger.Subcomponent
 
-@Component
+@DashboardFeatureScope
+@Subcomponent(modules = [DashboardFeatureModule::class])
 interface DashboardFeatureComponent {
+
+    fun inject(fragment: DashboardFragment)
+
+    @Subcomponent.Factory
+    interface Factory{
+        fun create(): DashboardFeatureComponent
+    }
 }

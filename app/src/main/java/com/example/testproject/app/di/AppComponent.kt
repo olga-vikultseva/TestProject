@@ -1,20 +1,19 @@
 package com.example.testproject.app.di
 
-import com.example.testproject.app.TestApplication
-import com.example.testproject.core.di.AppDependency
+import com.example.testproject.dashboardfeature.di.DashboardFeatureComponent
+import com.example.testproject.homefeature.di.HomeFeatureComponent
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [AppModule::class])
-interface AppComponent : AppDependency {          // interface AppComponent наследуясь от interface AppDependency
-                                                  // должен предоставить в одном из своих модулей метод, который будет
-                                                  // возвращать объект типа TextHolder?
-    fun inject(testApplication: TestApplication)
+interface AppComponent {
 
-    class Initializer private constructor() {              // Отличается ли такой подход от interface Factory c fun create()?
-        companion object {
-            fun init(): AppComponent = DaggerAppComponent.builder().build()
-        }
+    fun dashboardFeatureComponentFactory(): DashboardFeatureComponent.Factory
+    fun homeFeatureComponentFactory(): HomeFeatureComponent.Factory
+
+    @Component.Factory
+    interface Factory {
+        fun create(): AppComponent
     }
 }
